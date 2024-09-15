@@ -1,0 +1,155 @@
+﻿<Window x:Class="DemoEx.WaiterPanel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DemoEx"
+        mc:Ignorable="d"
+        Title="WaiterPanel" Height="500" Width="800"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStyle="None"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Window.Resources>
+        <!-- Стиль для TextBlock -->
+        <Style TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="MV Boli"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- Стиль для Button -->
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="MV Boli"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True"/>
+                    </MultiTrigger.Conditions>
+                    <MultiTrigger.Setters>
+                        <Setter Property="Background" Value="#303030"/>
+                        <Setter Property="FontWeight" Value="DemiBold"/>
+                    </MultiTrigger.Setters>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Стиль для DataGrid -->
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#303030"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="MV Boli"/>
+            <Setter Property="RowBackground" Value="#404040"/>
+            <Setter Property="AlternatingRowBackground" Value="#505050"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="ColumnHeaderHeight" Value="40"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#202020"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Стиль для DataGridRow -->
+        <Style TargetType="DataGridRow">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#606060"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="10">
+        <Border CornerRadius="10"
+                Opacity="0.95"
+                BorderThickness="3">
+
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#202020" Offset="0"/>
+                    <GradientStop Color="White" Offset="0.5"/>
+                    <GradientStop Color="#202020" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+
+
+            <!--Grid Waiter Panel-->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.RowSpan="2" Background="#202020" CornerRadius="10, 0, 0, 10">
+                    <StackPanel Orientation="Vertical" Grid.RowSpan="2">
+                        <StackPanel Orientation="Vertical" Grid.Column="1">
+                            <TextBlock Text="Waiter Panel" Foreground="White" FontSize="28" HorizontalAlignment="Center" Margin="10"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" Grid.Row="1" Margin="0 20">
+                            <Button x:Name="ButtonOrders" Content="Orders" Height="40" Margin="0 10 20 10" Click="ButtonOrders_Click"/>
+                            <Button x:Name="ButtonAddOrder" Content="Add Order" Height="40" Margin="0 10 20 10" Click="ButtonAddOrder_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Button Grid.Row="1" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20 0 0 10" Click="ButtonExitClick">
+                    <Image Source="\Images\iconExit.png" Opacity="0.6" />
+
+                </Button>
+
+                <Border CornerRadius="0,10,10,0" Grid.Column="1" Grid.RowSpan="2" Background="#1a1a1a">
+                    <Grid Grid.Column="1" Grid.Row="1" Margin="10">
+                        <DataGrid x:Name="DataGridOrders" AutoGenerateColumns="False" CanUserAddRows="False" Margin="0 0 10 0">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Order ID" Binding="{Binding OrderId}" Width="100"/>
+                                <DataGridTextColumn Header="Client Name" Binding="{Binding ClientName}" Width="100"/>
+                                <DataGridTextColumn Header="Dish" Binding="{Binding Dish.DishName}" Width="100"/>
+                                <DataGridTextColumn Header="Price" Binding="{Binding Dish.Price}" Width="150"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status.StatusName}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- Кнопка для обновления данных -->
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <Button x:Name="ButtonRefresh" Content="Refresh" Width="100" Margin="5" Click="ButtonRefresh_Click" Background="Transparent"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                
+
+            </Grid>
+
+        </Border>
+        
+    </Border>
+    
+</Window>
